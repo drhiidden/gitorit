@@ -1,0 +1,101 @@
+# Git Commit Audit Report
+
+**Repository**: {{ repo_name }}
+**Path**: `{{ repo_path }}`
+**Analyzed**: {{ analyzed_at }}
+
+---
+
+## Executive Summary
+
+- **Total Commits**: {{ total_commits }}
+- **Period**: {{ date_start }} → {{ date_end }}
+- **Average Velocity**: {{ velocity_avg }} commits/day
+- **Total Authors**: {{ authors|length }}
+
+## AI Detection Results
+
+| Metric | Count | Percentage |
+|--------|-------|------------|
+| Total with AI | {{ ai_detection.total }} | {{ ai_detection.percentage|round(1) }}% |
+| 🔴 High Risk | {{ ai_detection.high_risk }} | {{ (ai_detection.high_risk / total_commits * 100)|round(1) }}% |
+| 🟡 Medium Risk | {{ ai_detection.medium_risk }} | {{ (ai_detection.medium_risk / total_commits * 100)|round(1) }}% |
+| 🟢 Clean | {{ ai_detection.clean }} | {{ (ai_detection.clean / total_commits * 100)|round(1) }}% |
+
+## Peak Activity Periods
+
+{% for peak in peak_activity[:10] %}
+- {% if peak.is_suspicious %}🔴{% else %}  {% endif %} **{{ peak.date }}**: {{ peak.commits }} commits{% if peak.is_suspicious %} **(SUSPICIOUS - >10/day)**{% endif %}
+{% endfor %}
+
+## Épocas Identificadas
+
+| Época | Período | Commits | Velocity | AI Detection | Risk % |
+|-------|---------|---------|----------|--------------|--------|
+{% for epoch in epochs %}
+| {{ epoch.name }} | {{ epoch.date_start }} → {{ epoch.date_end }} | {{ epoch.total_commits }} | {{ epoch.velocity }}/day | {{ epoch.ai_detection_rate|round(0) }}% | {{ epoch.risk_percentage|round(0) }}% |
+{% endfor %}
+
+## Top AI Patterns Detected
+
+{% for pattern, count in top_ai_patterns.items() %}
+- **`{{ pattern }}`**: {{ count }} occurrences
+{% endfor %}
+
+## Commits Problemáticos - Sugerencias de Reescritura
+
+{% for commit in problematic_commits[:30] %}
+### {% if commit.risk_level == "high" %}🔴{% elif commit.risk_level == "medium" %}🟡{% else %}🟢{% endif %} `{{ commit.hash }}` - Score: {{ commit.ai_score|round(0) }}
+
+**Fecha**: {{ commit.date }}
+**Autor**: {{ commit.author }}
+
+**Original**:
+```
+{{ commit.message }}
+```
+
+**Sugerencia de Reescritura**:
+```
+{{ commit.suggested_rewrite }}
+```
+
+**Patrones detectados**: {{ commit.patterns|join(", ") }}
+
+---
+
+{% endfor %}
+
+## Recomendaciones
+
+### 🔴 Acción Inmediata ({{ ai_detection.high_risk }} commits)
+
+1. Revisar todos los commits de alto riesgo
+2. Considerar un interactive rebase para limpiar el historial
+3. Usar las sugerencias de reescritura como punto de partida
+4. Validar que los nuevos mensajes reflejen correctamente los cambios
+
+### 🟡 Revisión Secundaria ({{ ai_detection.medium_risk }} commits)
+
+1. Evaluar commits de riesgo medio
+2. Simplificar mensajes excesivamente verbosos
+3. Eliminar lenguaje de marketing y palabras tipo IA
+4. Aplicar formato Conventional Commits donde falte
+
+### 🟢 Prevención Futura
+
+1. Implementar pre-commit hooks para validación
+2. Seguir estrictamente Conventional Commits
+3. Mantener mensajes bajo 72 caracteres
+4. Evitar mensajes generados por IA sin revisión
+5. Preferir verbos simples (add, update, fix, remove)
+
+## Autores
+
+{% for author, count in authors.items() %}
+- **{{ author }}**: {{ count }} commits ({{ (count / total_commits * 100)|round(1) }}%)
+{% endfor %}
+
+---
+
+*Generado por git-auditor v0.1.0 el {{ analyzed_at }}*

@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Git Audit Report - {{ repo_name }}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            padding: 2rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 2rem;
+        }
+        
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .header .meta {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .content {
+            padding: 2rem;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .metric-card {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .metric-card.high {
+            border-left-color: #e74c3c;
+        }
+        
+        .metric-card.medium {
+            border-left-color: #f39c12;
+        }
+        
+        .metric-card.low {
+            border-left-color: #2ecc71;
+        }
+        
+        .metric-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .metric-label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .section {
+            margin-bottom: 3rem;
+        }
+        
+        .section h2 {
+            color: #1e3c72;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #667eea;
+        }
+        
+        .commit-list {
+            list-style: none;
+        }
+        
+        .commit-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid #ddd;
+        }
+        
+        .commit-item.high {
+            border-left-color: #e74c3c;
+            background: #fee;
+        }
+        
+        .commit-item.medium {
+            border-left-color: #f39c12;
+            background: #ffeaa7;
+        }
+        
+        .commit-hash {
+            font-family: 'Courier New', monospace;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .commit-score {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 0.2rem 0.6rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .commit-message {
+            margin: 0.5rem 0;
+            color: #333;
+        }
+        
+        .commit-rewrite {
+            margin-top: 0.5rem;
+            padding: 0.5rem;
+            background: white;
+            border-left: 3px solid #2ecc71;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+        
+        th, td {
+            padding: 0.75rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: #f8f9fa;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: #666;
+            font-size: 0.9rem;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📊 Git Commit Audit Report</h1>
+            <div class="meta">
+                <strong>{{ repo_name }}</strong> | {{ total_commits }} commits | {{ date_start }} → {{ date_end }}
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <div class="metric-value">{{ total_commits }}</div>
+                    <div class="metric-label">Total Commits</div>
+                </div>
+                
+                <div class="metric-card high">
+                    <div class="metric-value" style="color: #e74c3c;">{{ ai_detection.high_risk }}</div>
+                    <div class="metric-label">🔴 High Risk</div>
+                </div>
+                
+                <div class="metric-card medium">
+                    <div class="metric-value" style="color: #f39c12;">{{ ai_detection.medium_risk }}</div>
+                    <div class="metric-label">🟡 Medium Risk</div>
+                </div>
+                
+                <div class="metric-card low">
+                    <div class="metric-value" style="color: #2ecc71;">{{ ai_detection.clean }}</div>
+                    <div class="metric-label">🟢 Clean</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-value">{{ velocity_avg }}</div>
+                    <div class="metric-label">Commits/Day</div>
+                </div>
+                
+                <div class="metric-card">
+                    <div class="metric-value">{{ ai_detection.percentage|round(0) }}%</div>
+                    <div class="metric-label">AI Detection Rate</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h2>🎯 Commits Problemáticos</h2>
+                <ul class="commit-list">
+                    {% for commit in problematic_commits[:20] %}
+                    <li class="commit-item {{ commit.risk_level }}">
+                        <div>
+                            <span class="commit-hash">{{ commit.hash }}</span>
+                            <span class="commit-score">Score: {{ commit.ai_score|round(0) }}</span>
+                            <span style="color: #666;">{{ commit.date }}</span>
+                        </div>
+                        <div class="commit-message">
+                            <strong>Original:</strong> {{ commit.message }}
+                        </div>
+                        {% if commit.suggested_rewrite %}
+                        <div class="commit-rewrite">
+                            ✅ {{ commit.suggested_rewrite }}
+                        </div>
+                        {% endif %}
+                        <div style="margin-top: 0.5rem; color: #666; font-size: 0.85rem;">
+                            Patterns: {{ commit.patterns|join(", ") }}
+                        </div>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            
+            <div class="section">
+                <h2>📈 Épocas Identificadas</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Época</th>
+                            <th>Período</th>
+                            <th>Commits</th>
+                            <th>Velocity</th>
+                            <th>AI Detection</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for epoch in epochs %}
+                        <tr>
+                            <td><strong>{{ epoch.name }}</strong></td>
+                            <td>{{ epoch.date_start }} → {{ epoch.date_end }}</td>
+                            <td>{{ epoch.total_commits }}</td>
+                            <td>{{ epoch.velocity }}/day</td>
+                            <td>{{ epoch.ai_detection_rate|round(0) }}%</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            
+            <div class="section">
+                <h2>🏆 Top AI Patterns</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Pattern</th>
+                            <th>Occurrences</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pattern, count in top_ai_patterns.items() %}
+                        <tr>
+                            <td><code>{{ pattern }}</code></td>
+                            <td>{{ count }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <div class="footer">
+            Generated by <strong>git-auditor v0.1.0</strong> | {{ analyzed_at }}
+        </div>
+    </div>
+</body>
+</html>
