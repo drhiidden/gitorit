@@ -11,6 +11,7 @@ from git import Repo
 from gitorit.models import CommitAnalysis, Epoch, AnalysisReport
 from gitorit.detector import AIDetector
 from gitorit.rewriter import CommitRewriter
+from gitorit.diff_simplifier import simplify_diff
 
 
 class GitAnalyzer:
@@ -29,12 +30,13 @@ class GitAnalyzer:
         self.detector = AIDetector()
         self.rewriter = CommitRewriter()
     
-    def extract_commits(self, branch: str = "HEAD") -> list[CommitAnalysis]:
+    def extract_commits(self, branch: str = "HEAD", include_diffs: bool = False) -> list[CommitAnalysis]:
         """
         Extrae todos los commits del repositorio.
         
         Args:
             branch: Branch o ref a analizar (default: HEAD)
+            include_diffs: Si es True, extrae y simplifica el diff de cada commit
             
         Returns:
             Lista de CommitAnalysis ordenada por fecha (más reciente primero)
@@ -56,6 +58,14 @@ class GitAnalyzer:
                 insertions=stats.get("insertions", 0),
                 deletions=stats.get("deletions", 0),
             )
+            
+            if include_diffs:
+                try:
+                    # Obtenemos el diff en formato unificado ignorando el mensaje de commit
+                    raw_diff = self.repo.git.show(commit.hexsha, format="", patch=True)
+                    analysis.simplified_diff = simplify_diff(raw_diff)
+                except Exception:
+                    analysis.simplified_diff = ""
             
             analysis.ai_score = self.detector.calculate_ai_score(analysis.message)
             analysis.ai_patterns = self.detector.detect_patterns(analysis.message)

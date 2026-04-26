@@ -26,6 +26,7 @@ class CommitAnalysis:
     ai_score: float = 0.0
     ai_patterns: list[str] = field(default_factory=list)
     suggested_rewrite: Optional[str] = None
+    simplified_diff: Optional[str] = None
     
     commit_type: Optional[str] = None
     scope: Optional[str] = None
