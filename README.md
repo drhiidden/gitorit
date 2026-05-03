@@ -1,6 +1,30 @@
-# Git Commit Auditor
+![gitorit banner](docs/banner.png)
 
-CLI tool profesional para auditar historial de git, detectar commits generados por IA, y sugerir rewrites más profesionales.
+# gitorit
+
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
+[![Tests](https://img.shields.io/badge/tests-40%20passing-brightgreen.svg)](#testing)
+![visitors](https://komarev.com/ghpvc/?username=drhiidden&repo=gitorit&color=00ff88&style=flat-square)
+
+CLI para auditar historial de git y detectar commits generados por IA.
+
+## Cómo funciona
+
+```mermaid
+flowchart LR
+    A[git log] --> B[GitAnalyzer]
+    B --> C{Pattern\nDetection}
+    C -->|keywords| D[Score 0-100]
+    C -->|structure| D
+    C -->|length| D
+    D --> E{Risk Level}
+    E -->|score > 70| F[🔴 HIGH]
+    E -->|score 40-70| G[🟡 MED]
+    E -->|score < 40| H[🟢 OK]
+    F --> I[Rewrite\nSuggestion]
+    G --> I
+```
 
 ## ¿Qué hace?
 
@@ -462,3 +486,9 @@ Ver `CONTRIBUTING.md` para guía de contribución.
 ---
 
 **Versión**: 0.1.0 | **Tests**: 40/40 passing | **Status**: Production Ready
+
+---
+
+## Metodología
+
+Desarrollado con [HCP (Human-Code-AI Protocol)](https://github.com/haletheia/human-code-ai-protocol) — protocolo git-native para Context Engineering que mantiene el conocimiento del proyecto versionado y trazable.
