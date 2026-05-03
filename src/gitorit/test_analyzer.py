@@ -1,6 +1,6 @@
 from analyzer import GitAnalyzer
 
-analyzer = GitAnalyzer("/home/drugo/projects/HALETHEIA/apps/2-open-core/gitorit")
+analyzer = GitAnalyzer(".")  # path to any git repo
 commits = analyzer.extract_commits(include_diffs=True)
 for c in commits[:2]:
     print(f"Commit: {c.short_hash}")

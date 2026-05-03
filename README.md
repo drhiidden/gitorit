@@ -16,7 +16,8 @@ Analiza tu historial de git y detecta commits con lenguaje característico de IA
 ## Instalación
 
 ```bash
-cd /home/drugo/projects/HALETHEIA/apps/gitorit
+git clone https://github.com/drhiidden/gitorit.git
+cd gitorit
 python3 -m venv venv
 source venv/bin/activate
 pip install -e .
