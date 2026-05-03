@@ -49,9 +49,21 @@ dmypy.json
 
 # Exports
 *.json
-*.md
+
+# Internal dev docs (never publish)
+.cursor/
+SPRINT-*.md
+SESSION-*.md
+REPORTE-*.md
+TASK_COMPLETION*.md
+*-COMPLETADO.md
+
+# Allow public docs
 !README.md
+!CHANGELOG.md
+!CONTRIBUTING.md
 !templates/*.md.j2
+!docs/*.md
 
 # OS
 .DS_Store
