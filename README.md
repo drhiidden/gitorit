@@ -2,7 +2,7 @@
 
 # gitorit
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
 [![Tests](https://img.shields.io/badge/tests-40%20passing-brightgreen.svg)](#testing)
 ![visitors](https://komarev.com/ghpvc/?username=drhiidden&repo=gitorit&color=00ff88&style=flat-square)
