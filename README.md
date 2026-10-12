@@ -5,7 +5,7 @@
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
 [![Tests](https://img.shields.io/badge/tests-40%20passing-brightgreen.svg)](#testing)
-[![views](https://komarev.com/ghpvc/?username=lab-gitorit&label=views&color=0e75b6)](https://github.com/drhiidden/gitorit)
+[![views](https://komarev.com/ghpvc/?username=drhiidden&repo=gitorit&label=views&color=0e75b6)](https://github.com/drhiidden/gitorit)
 
 **CLI para auditar historial de git y detectar commits generados por IA.**
 
