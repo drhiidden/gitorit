@@ -5,8 +5,7 @@
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](LICENSE)
 [![Python 3.11+](https://img.shields.io/badge/Python-3.11+-blue.svg)](https://python.org)
 [![Tests](https://img.shields.io/badge/tests-40%20passing-brightgreen.svg)](#testing)
-[![views](https://komarev.com/ghpvc/?username=drhiidden&repo=gitorit&label=views&color=0e75b6)](https://github.com/drhiidden/gitorit)
-
+![views](https://visitor-badge.laobi.icu/badge?page_id=drhiidden.gitorit&title=views&left_color=555&right_color=0e75b6)
 **CLI para auditar historial de git y detectar commits generados por IA.**
 
 Analiza tu historial de git y detecta commits con lenguaje característico de IA: palabras clave ("enhancing", "comprehensive"), mensajes largos (>200 chars), patrones estructurales (listas, gerundios múltiples).
